@@ -1,0 +1,152 @@
+package org.upnext.productservice.services;
+
+
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponentsBuilder;
+import org.upnext.productservice.contracts.products.ProductRequest;
+import org.upnext.productservice.contracts.products.ProductResponse;
+import org.upnext.productservice.entities.Category;
+import org.upnext.productservice.entities.Product;
+
+import static org.upnext.productservice.errors.CategoryErrors.CategoryNotFound;
+import static org.upnext.productservice.errors.ProductErrors.*;
+
+import org.upnext.productservice.errors.CategoryErrors;
+import org.upnext.productservice.mappers.ProductMapper;
+import org.upnext.productservice.repositories.CategoryRepository;
+import org.upnext.productservice.repositories.ProductRepository;
+import org.upnext.sharedlibrary.Errors.Result;
+
+import java.io.IOException;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+public class ProductServices {
+
+    private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
+    private final ProductMapper productMapper;
+    @Value("${file.upload-dir}")
+    private String uploadDir;
+
+
+
+    public Result<ProductResponse> getProduct(Long id) {
+
+        Product product = productRepository.findById(id).orElse(null);
+        if (product == null) {
+            return Result.failure(ProductNotFound);
+        }
+
+        return  Result.success(productMapper.toProductResponse(product));
+    }
+
+    public Result<URI> save
+            (
+                    ProductRequest productDto,
+                    MultipartFile image,
+                    HttpServletRequest request,
+                    UriComponentsBuilder urb
+            ) {
+
+
+        String imageUrl = saveImage(image, request);
+        Category category = categoryRepository.findById(productDto.getCategoryId()).orElse(null);
+        if (category == null) {
+            return Result.failure(CategoryNotFound);
+        }
+
+        Product product = productMapper.toProduct(productDto);
+        product.setImageUrl(imageUrl);
+        product.setCategory(category);
+        Product product1 = productRepository.save(product);
+
+
+//        URI uri = URI.create("/products/" + product1.getId());
+        URI uri = urb
+                .path("/products/{id}")
+                .buildAndExpand(product1.getId())
+                .toUri();
+        return Result.success(uri);
+    }
+
+
+    public Result<List<ProductResponse>> getProducts(Pageable pageable) {
+        Page<Product> page = productRepository.findAll(
+                PageRequest.of(
+                        pageable.getPageNumber(),
+                        pageable.getPageSize(),
+                        pageable.getSortOr(Sort.by(Sort.Direction.ASC, "name"))
+                )
+        );
+
+        return Result.success(productMapper.toProductResponseList(page.getContent()));
+    }
+
+    public Result<Void> updateProduct(Long id, ProductRequest productDto, MultipartFile image, HttpServletRequest request) {
+        String imageUrl = null;
+        if (image.getSize() != 0) {
+            imageUrl = saveImage(image, request);
+        }
+        Product product = productRepository.findById(id).orElse(null);
+        if (product == null) {
+            return Result.failure(ProductNotFound);
+        }
+        Product product1 = productMapper.toProduct(productDto);
+        product1.setId(product.getId());
+        if (imageUrl != null) {
+            product1.setImageUrl(imageUrl);
+        }
+        productRepository.save(product1);
+        return Result.success();
+    }
+
+    public Result<Void> delete(Long id) {
+        boolean exists = productRepository.existsById(id);
+        if (!exists) {
+            return Result.failure(ProductNotFound);
+        }
+        productRepository.deleteById(id);
+        return Result.success();
+    }
+    private String saveImage(MultipartFile image, HttpServletRequest request) {
+        Path uploadPath = Paths.get(uploadDir);
+        if (!Files.exists(uploadPath)) {
+            try {
+                Files.createDirectories(uploadPath);
+            } catch (IOException e) {
+
+            }
+        }
+
+        String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
+        Path filePath = uploadPath.resolve(fileName);
+
+        try {
+            Files.copy(image.getInputStream(), filePath);
+        } catch (IOException e) {
+
+        }
+
+        String baseUrl = request.getScheme() + "://" +
+                request.getServerName() + ":" +
+                request.getServerPort();
+
+        String fullPath = baseUrl + "/images/" + fileName;
+        return  fullPath;
+    }
+}
