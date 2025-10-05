@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 public class ProductResponse {
     Long id;
     String name;
+    Double price;
     String description;
     String imageUrl;
     Integer stock;
