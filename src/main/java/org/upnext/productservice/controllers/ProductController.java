@@ -31,13 +31,6 @@ public class ProductController {
     }
 
 
-    @GetMapping
-    public ResponseEntity<List<ProductResponse>> findAll(Pageable pageable) {
-        Result<List<ProductResponse>> result = productServices.getProducts(pageable);
-
-        return ResponseEntity.ok(result.getValue());
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity findById(@PathVariable Long id) {
         Result<ProductResponse> result = productServices.getProduct(id);
@@ -83,6 +76,19 @@ public class ProductController {
             return ResponseEntity.noContent().build();
         }
         return response(result.getError());
+    }
+
+
+    @GetMapping
+    public ResponseEntity<List<ProductResponse>> findAll(String word,
+                                                         String category,
+                                                         String brand,
+                                                         Double minPrice,
+                                                         Double maxPrice,
+                                                         Pageable pageable) {
+        Result<List<ProductResponse>> result = productServices.findAllFilteredProducts(word, category, brand, minPrice, maxPrice, pageable);
+
+        return ResponseEntity.ok(result.getValue());
     }
 
 
