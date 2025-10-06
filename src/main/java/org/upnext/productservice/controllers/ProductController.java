@@ -80,12 +80,13 @@ public class ProductController {
 
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> findAll(String word,
-                                                         String category,
-                                                         String brand,
-                                                         Double minPrice,
-                                                         Double maxPrice,
-                                                         Pageable pageable) {
+    public ResponseEntity<List<ProductResponse>> findAll(
+            @RequestParam(required = false) String word,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String brand,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            Pageable pageable) {
         Result<List<ProductResponse>> result = productServices.findAllFilteredProducts(word, category, brand, minPrice, maxPrice, pageable);
 
         return ResponseEntity.ok(result.getValue());
