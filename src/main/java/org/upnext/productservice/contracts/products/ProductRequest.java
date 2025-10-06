@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
+
 
 
 @Data
@@ -29,4 +29,5 @@ public class ProductRequest
     Integer stock;
 
     Long categoryId;
+    Long brandId;
 }

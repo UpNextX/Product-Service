@@ -2,7 +2,6 @@ package org.upnext.productservice.services;
 
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.cloud.commons.config.DefaultsBindHandlerAdvisor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +27,6 @@ public class CategoryServices {
 
     public final CategoryRepository categoryRepository;
     public final CategoryMapper  categoryMapper;
-    private final DefaultsBindHandlerAdvisor.MappingsProvider mappingsProvider;
 
 
     public Result<CategoryResponse> findCategoryById(Long id) {

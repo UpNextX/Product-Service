@@ -8,19 +8,23 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.upnext.productservice.contracts.products.ProductRequest;
 import org.upnext.productservice.contracts.products.ProductResponse;
+import org.upnext.productservice.entities.Brand;
 import org.upnext.productservice.entities.Category;
 import org.upnext.productservice.entities.Product;
 
+import static org.upnext.productservice.errors.BrandErrors.BrandNotFound;
 import static org.upnext.productservice.errors.CategoryErrors.CategoryNotFound;
 import static org.upnext.productservice.errors.ProductErrors.*;
+import static org.upnext.productservice.helpers.ProductSpecification.filters;
 
-import org.upnext.productservice.errors.CategoryErrors;
 import org.upnext.productservice.mappers.ProductMapper;
+import org.upnext.productservice.repositories.BrandRepository;
 import org.upnext.productservice.repositories.CategoryRepository;
 import org.upnext.productservice.repositories.ProductRepository;
 import org.upnext.sharedlibrary.Errors.Result;
@@ -39,6 +43,7 @@ public class ProductServices {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final BrandRepository brandRepository;
     private final ProductMapper productMapper;
     @Value("${file.upload-dir}")
     private String uploadDir;
@@ -65,14 +70,13 @@ public class ProductServices {
 
 
         String imageUrl = saveImage(image, request);
-        Category category = categoryRepository.findById(productDto.getCategoryId()).orElse(null);
-        if (category == null) {
-            return Result.failure(CategoryNotFound);
+        Result<Product> result = getCategoryAndBrand(productDto);
+        if (!result.isSuccess()) {
+            return Result.failure(result.getError());
         }
 
-        Product product = productMapper.toProduct(productDto);
+        Product product = result.getValue();
         product.setImageUrl(imageUrl);
-        product.setCategory(category);
         Product product1 = productRepository.save(product);
 
 
@@ -84,9 +88,18 @@ public class ProductServices {
         return Result.success(uri);
     }
 
-
-    public Result<List<ProductResponse>> getProducts(Pageable pageable) {
-        Page<Product> page = productRepository.findAll(
+    public Result<List<ProductResponse>>
+    findAllFilteredProducts(
+            String word,
+            String category,
+            String brand,
+            Double minPrice,
+            Double maxPrice,
+            Pageable pageable
+    )
+    {
+        Specification<Product> specification = filters(word,  category, brand, minPrice, maxPrice);
+        Page<Product> page = productRepository.findAll(specification,
                 PageRequest.of(
                         pageable.getPageNumber(),
                         pageable.getPageSize(),
@@ -106,7 +119,14 @@ public class ProductServices {
         if (product == null) {
             return Result.failure(ProductNotFound);
         }
-        Product product1 = productMapper.toProduct(productDto);
+
+
+        Result<Product> result = getCategoryAndBrand(productDto);
+        if (!result.isSuccess()) {
+            return Result.failure(result.getError());
+        }
+        Product product1 = result.getValue();
+
         product1.setId(product.getId());
         if (imageUrl != null) {
             product1.setImageUrl(imageUrl);
@@ -148,5 +168,22 @@ public class ProductServices {
 
         String fullPath = baseUrl + "/images/" + fileName;
         return  fullPath;
+    }
+
+    private Result<Product> getCategoryAndBrand(ProductRequest productDto) {
+        Category category = categoryRepository.findById(productDto.getCategoryId()).orElse(null);
+        Brand brand = brandRepository.findById(productDto.getBrandId()).orElse(null);
+        if (category == null ) {
+            return Result.failure(CategoryNotFound);
+        }
+        if (brand == null ) {
+            return Result.failure(BrandNotFound);
+        }
+
+        Product product = productMapper.toProduct(productDto);
+
+        product.setCategory(category);
+        product.setBrand(brand);
+        return Result.success(product);
     }
 }

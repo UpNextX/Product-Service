@@ -15,6 +15,7 @@ public interface ProductMapper {
     Product toProduct(ProductRequest productRequest);
 
     @Mapping(source = "category.id", target = "categoryId")
+    @Mapping(source = "brand.id", target = "brandId")
     ProductResponse toProductResponse(Product product);
 
     List<ProductResponse> toProductResponseList(List<Product> products);
