@@ -115,6 +115,16 @@ public class ProductServices {
         return Result.success();
     }
 
+    public Result<Void> updateProductStock(Long id, Integer stock) {
+        Product product = productRepository.findById(id).orElse(null);
+        if (product == null) {
+            return Result.failure(ProductNotFound);
+        }
+        product.setStock(product.getStock() + stock);
+        productRepository.save(product);
+        return Result.success();
+    }
+
     public Result<Void> delete(Long id) {
         boolean exists = productRepository.existsById(id);
         if (!exists) {

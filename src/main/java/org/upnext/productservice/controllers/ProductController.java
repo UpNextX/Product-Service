@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.upnext.productservice.contracts.products.ProductRequest;
 import org.upnext.productservice.contracts.products.ProductResponse;
+import org.upnext.sharedlibrary.Dtos.StockUpdateRequest;
 import org.upnext.productservice.entities.Product;
 import org.upnext.productservice.services.ProductServices;
 import org.upnext.sharedlibrary.Errors.Error;
@@ -79,6 +80,15 @@ public class ProductController {
     @PutMapping(value = "/{id}", consumes = {"multipart/form-data"})
     public ResponseEntity update(@PathVariable Long id, @Valid @RequestPart ProductRequest product, @RequestPart MultipartFile image, HttpServletRequest request) {
         Result result = productServices.updateProduct(id, product, image, request);
+        if (result.isSuccess()) {
+            return ResponseEntity.noContent().build();
+        }
+        return response(result.getError());
+    }
+
+    @PutMapping(value="/{id}/stock/decrease")
+    public ResponseEntity updateStock(@PathVariable Long id, @Valid @RequestBody StockUpdateRequest stockUpdateRequest){
+        Result result = productServices.updateProductStock(id, -stockUpdateRequest.getStock());
         if (result.isSuccess()) {
             return ResponseEntity.noContent().build();
         }
