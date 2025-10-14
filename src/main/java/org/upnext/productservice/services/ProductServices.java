@@ -3,6 +3,7 @@ package org.upnext.productservice.services;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,6 +13,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.upnext.productservice.configurations.RabbitMQConfig;
 import org.upnext.productservice.contracts.products.ProductRequest;
 import org.upnext.productservice.contracts.products.ProductResponse;
 import org.upnext.productservice.entities.Brand;
@@ -28,6 +30,7 @@ import org.upnext.productservice.repositories.BrandRepository;
 import org.upnext.productservice.repositories.CategoryRepository;
 import org.upnext.productservice.repositories.ProductRepository;
 import org.upnext.sharedlibrary.Errors.Result;
+import org.upnext.sharedlibrary.Events.ProductEvent;
 
 import java.io.IOException;
 import java.net.URI;
@@ -45,6 +48,7 @@ public class ProductServices {
     private final CategoryRepository categoryRepository;
     private final BrandRepository brandRepository;
     private final ProductMapper productMapper;
+    private final RabbitTemplate rabbitTemplate;
     @Value("${file.upload-dir}")
     private String uploadDir;
 
@@ -79,7 +83,13 @@ public class ProductServices {
         product.setImageUrl(imageUrl);
         Product product1 = productRepository.save(product);
 
+        ProductEvent productEvent = productMapper.toProductEvent(product1);
+        productEvent.setUrl("/products/" + product.getId());
 
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.PRODUCT_EXCHANGE,
+                RabbitMQConfig.PRODUCT_KEY,
+                productEvent);
 //        URI uri = URI.create("/products/" + product1.getId());
         URI uri = urb
                 .path("/products/{id}")

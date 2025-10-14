@@ -3,15 +3,14 @@ package org.upnext.productservice.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.upnext.productservice.contracts.products.ProductRequest;
 import org.upnext.productservice.contracts.products.ProductResponse;
-import org.upnext.productservice.entities.Product;
 import org.upnext.productservice.services.ProductServices;
 import org.upnext.sharedlibrary.Errors.Error;
 import org.upnext.sharedlibrary.Errors.Result;
@@ -23,13 +22,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/products")
+@RequiredArgsConstructor
 public class ProductController {
 
     private final ProductServices productServices;
-    public ProductController(ProductServices productServices) {
-        this.productServices = productServices;
-    }
-
 
     @GetMapping("/{id}")
     public ResponseEntity findById(@PathVariable Long id) {
