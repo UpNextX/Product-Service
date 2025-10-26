@@ -3,6 +3,7 @@ package org.upnext.productservice.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.upnext.productservice.contracts.brands.BrandRequest;
@@ -17,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/brands")
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('ADMIN')")
 public class BrandController {
 
     private final BrandServices BrandServices;

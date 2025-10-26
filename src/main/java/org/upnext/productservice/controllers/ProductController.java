@@ -4,8 +4,10 @@ package org.upnext.productservice.controllers;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -39,12 +41,14 @@ public class ProductController {
     }
 
     @PostMapping(consumes = {"multipart/form-data"})
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity save
             (
                     @Valid @RequestPart ProductRequest product,
                     @RequestPart MultipartFile image,
                     HttpServletRequest request,
-                    UriComponentsBuilder urb
+                    UriComponentsBuilder urb,
+                    Authentication authentication
             )
     {
         Result<URI> result = productServices.save(product, image, request, urb);
@@ -56,6 +60,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity deleteById(@PathVariable Long id) {
         Result result = productServices.delete(id);
         if (result.isSuccess()) {
@@ -66,6 +71,7 @@ public class ProductController {
     }
 
     @PutMapping(value = "/{id}", consumes = {"multipart/form-data"})
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity update(@PathVariable Long id, @Valid @RequestPart ProductRequest product, @RequestPart MultipartFile image, HttpServletRequest request) {
         Result result = productServices.updateProduct(id, product, image, request);
         if (result.isSuccess()) {
