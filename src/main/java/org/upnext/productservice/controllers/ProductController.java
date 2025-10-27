@@ -97,7 +97,7 @@ public class ProductController {
 
 
     @PutMapping("/{id}/stock")
-    public ResponseEntity<?> updateStock(@PathVariable Long id, @Valid @RequestPart StockUpdateRequest request) {
+    public ResponseEntity<?> updateStock(@PathVariable Long id, @Valid @RequestBody StockUpdateRequest request) {
         Result result = productServices.decreaseStock(id, request.getStock());
         return (result.isSuccess()) ? ResponseEntity.noContent().build() : response(result.getError());
     }
