@@ -7,7 +7,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-@MappedSuperclass
+@Entity
+@Table(name = "products")
+@Inheritance(strategy = InheritanceType.JOINED)
 @Data
 public class Product {
     @Id
