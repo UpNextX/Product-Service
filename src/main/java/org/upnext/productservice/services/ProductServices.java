@@ -187,6 +187,15 @@ public class ProductServices {
         return  fullPath;
     }
 
+    public Result<Void> decreaseStock(Long id, Integer amount) {
+        Product product = productRepository.findById(id).orElse(null);
+        if (product == null) {
+            return Result.failure(ProductNotFound);
+        }
+        product.setStock(product.getStock() + amount);
+        return Result.success();
+    }
+
     private Result<Product> getCategoryAndBrand(ProductRequest productDto) {
         Category category = categoryRepository.findById(productDto.getCategoryId()).orElse(null);
         Brand brand = brandRepository.findById(productDto.getBrandId()).orElse(null);

@@ -14,6 +14,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import org.upnext.productservice.contracts.products.ProductRequest;
 import org.upnext.productservice.contracts.products.ProductResponse;
 import org.upnext.productservice.services.ProductServices;
+import org.upnext.sharedlibrary.Dtos.StockUpdateRequest;
 import org.upnext.sharedlibrary.Errors.Error;
 import org.upnext.sharedlibrary.Errors.Result;
 
@@ -94,6 +95,12 @@ public class ProductController {
         return ResponseEntity.ok(result.getValue());
     }
 
+
+    @PutMapping("/{id}/stock")
+    public ResponseEntity<?> updateStock(@PathVariable Long id, @Valid @RequestPart StockUpdateRequest request) {
+        Result result = productServices.decreaseStock(id, request.getStock());
+        return (result.isSuccess()) ? ResponseEntity.noContent().build() : response(result.getError());
+    }
 
     private ResponseEntity response(Error error) {
         int status = error.getStatusCode();
