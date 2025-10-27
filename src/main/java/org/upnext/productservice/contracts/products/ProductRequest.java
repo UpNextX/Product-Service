@@ -16,18 +16,12 @@ public class ProductRequest
 {
     @NotNull(message = "Name is required")
     String name;
-
     @NotNull(message = "Description is required")
     String description;
-
     @DecimalMin(value = "1.0", inclusive = true, message = "Price must be at least 1.0")
     Double price;
-
-    String imageUrl;
-
     @Min(value = 1, message = "Stock must be at least 1")
     Integer stock;
-
     Long categoryId;
     Long brandId;
 }

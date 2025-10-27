@@ -98,6 +98,13 @@ public class ProductServices {
         return Result.success(uri);
     }
 
+    protected void publishEvent(ProductEvent productEvent) {
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.PRODUCT_EXCHANGE,
+                RabbitMQConfig.PRODUCT_KEY,
+                productEvent);
+    }
+
     public Result<List<ProductResponse>>
     findAllFilteredProducts(
             String word,
@@ -153,7 +160,7 @@ public class ProductServices {
         productRepository.deleteById(id);
         return Result.success();
     }
-    private String saveImage(MultipartFile image, HttpServletRequest request) {
+    protected String saveImage(MultipartFile image, HttpServletRequest request) {
         Path uploadPath = Paths.get(uploadDir);
         if (!Files.exists(uploadPath)) {
             try {

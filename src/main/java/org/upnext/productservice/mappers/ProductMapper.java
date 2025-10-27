@@ -15,12 +15,13 @@ public interface ProductMapper {
 
     Product toProduct(ProductRequest productRequest);
 
-    @Mapping(source = "category.id", target = "categoryId")
-    @Mapping(source = "brand.id", target = "brandId")
+    @Mapping(source = "category.name", target = "categoryName")
+    @Mapping(source = "brand.name", target = "brandName")
     ProductResponse toProductResponse(Product product);
 
     @Mapping(source = "category.name", target = "category")
     @Mapping(source = "brand.name", target = "brand")
+    @Mapping(source = "name", target = "name")
     ProductEvent  toProductEvent(Product product);
     List<ProductResponse> toProductResponseList(List<Product> products);
 }

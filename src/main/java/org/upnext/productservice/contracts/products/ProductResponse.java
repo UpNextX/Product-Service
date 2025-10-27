@@ -15,6 +15,6 @@ public class ProductResponse {
     String description;
     String imageUrl;
     Integer stock;
-    Long categoryId;
-    Long brandId;
+    String categoryName;
+    String brandName;
 }

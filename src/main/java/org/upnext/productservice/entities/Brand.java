@@ -22,7 +22,4 @@ public class Brand {
 
     @Size(min = 3, max = 20)
     String name;
-    @OneToMany(mappedBy = "brand")
-    @JsonIgnore
-    private List<Product> products;
 }
