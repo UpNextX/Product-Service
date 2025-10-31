@@ -66,7 +66,7 @@ public class RAMKitServices {
         RAMKit saved = ramKitRepository.save(entity);
 
         ProductEvent event = productMapper.toProductEvent(saved);
-        event.setUrl("/ramkits/" + saved.getId());
+        event.setUrl("http://localhost:5173/ramkits/" + saved.getId());
         productServices.publishEvent(event);
 
         URI uri = urb.path("/ramkits/{id}").buildAndExpand(saved.getId()).toUri();

@@ -66,7 +66,7 @@ public class PCCaseServices {
         PCCase saved = pcCaseRepository.save(entity);
 
         ProductEvent event = productMapper.toProductEvent(saved);
-        event.setUrl("/pccases/" + saved.getId());
+        event.setUrl("http://localhost:5173/pccases/" + saved.getId());
         productServices.publishEvent(event);
 
         URI uri = urb.path("/pccases/{id}").buildAndExpand(saved.getId()).toUri();

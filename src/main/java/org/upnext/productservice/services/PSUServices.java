@@ -66,7 +66,7 @@ public class PSUServices {
         PSU saved = psuRepository.save(entity);
 
         ProductEvent event = productMapper.toProductEvent(saved);
-        event.setUrl("/psus/" + saved.getId());
+        event.setUrl("http://localhost:5173/psus/" + saved.getId());
         productServices.publishEvent(event);
 
         URI uri = urb.path("/psus/{id}").buildAndExpand(saved.getId()).toUri();

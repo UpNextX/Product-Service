@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/categories")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
+
 public class CategoryController {
 
     private final CategoryServices categoryServices;
@@ -31,6 +31,7 @@ public class CategoryController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity createCategory(@RequestBody CategoryRequest categoryRequest, UriComponentsBuilder uriBuilder) {
         Result<URI> result = categoryServices.createNewCategory(categoryRequest, uriBuilder);
 
@@ -43,6 +44,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity getCategory(@PathVariable Long id) {
         Result<CategoryResponse> result = categoryServices.findCategoryById(id);
         if (result.isSuccess()) {
@@ -52,6 +54,7 @@ public class CategoryController {
     }
 
     @GetMapping("/name/{name}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity getCategoryByName(@PathVariable String name) {
         Result<CategoryResponse> result = categoryServices.findCategoryByName(name);
         if (result.isSuccess()) {
@@ -61,6 +64,7 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity updateCategory(@PathVariable Long id, @RequestBody CategoryRequest categoryRequest) {
         Result result =  categoryServices.updateCategory(id, categoryRequest);
         if (result.isSuccess()) {
@@ -70,6 +74,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity deleteCategory(@PathVariable Long id) {
         Result result = categoryServices.deleteCategory(id);
         if (result.isSuccess()) {

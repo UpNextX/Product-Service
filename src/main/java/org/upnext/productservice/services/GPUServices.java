@@ -66,7 +66,7 @@ public class GPUServices {
         GPU saved = gpuRepository.save(gpu);
 
         ProductEvent event = productMapper.toProductEvent(saved);
-        event.setUrl("/gpus/" + saved.getId());
+        event.setUrl("http://localhost:5173/gpus/" + saved.getId());
         productServices.publishEvent(event);
 
         URI uri = urb.path("/gpus/{id}").buildAndExpand(saved.getId()).toUri();

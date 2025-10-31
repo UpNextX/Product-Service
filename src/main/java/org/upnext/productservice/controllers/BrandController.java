@@ -18,7 +18,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/brands")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('ADMIN')")
 public class BrandController {
 
     private final BrandServices BrandServices;
@@ -31,6 +30,7 @@ public class BrandController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity createBrand(@RequestBody BrandRequest BrandRequest, UriComponentsBuilder uriBuilder) {
         Result<URI> result = BrandServices.createNewBrand(BrandRequest, uriBuilder);
 
@@ -43,6 +43,7 @@ public class BrandController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity getBrand(@PathVariable Long id) {
         Result<BrandResponse> result = BrandServices.findBrandById(id);
         if (result.isSuccess()) {
@@ -52,6 +53,7 @@ public class BrandController {
     }
 
     @GetMapping("/name/{name}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity getBrandByName(@PathVariable String name) {
         Result<BrandResponse> result = BrandServices.findBrandByName(name);
         if (result.isSuccess()) {
@@ -61,6 +63,7 @@ public class BrandController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity updateBrand(@PathVariable Long id, @RequestBody BrandRequest BrandRequest) {
         Result<Void> result =  BrandServices.updateBrand(id, BrandRequest);
         if (result.isSuccess()) {
@@ -70,6 +73,7 @@ public class BrandController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteBrand(@PathVariable Long id) {
         Result<Void> result = BrandServices.deleteBrand(id);
         if (result.isSuccess()) {

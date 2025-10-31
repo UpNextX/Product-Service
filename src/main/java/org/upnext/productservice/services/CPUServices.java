@@ -73,7 +73,7 @@ public class CPUServices {
         CPU cpu1 = cpuRepository.save(cpu);
 
         ProductEvent productEvent = productMapper.toProductEvent(cpu1);
-        productEvent.setUrl("/cpus/" + cpu1.getId());
+        productEvent.setUrl("http://localhost:5173/cpus/" + cpu1.getId());
         productServices.publishEvent(productEvent);
 
         URI uri = urb

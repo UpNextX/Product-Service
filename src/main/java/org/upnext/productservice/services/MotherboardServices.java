@@ -69,7 +69,7 @@ public class MotherboardServices {
         Motherboard saved = motherboardRepository.save(mb);
 
         ProductEvent event = productMapper.toProductEvent(saved);
-        event.setUrl("/motherboards/" + saved.getId());
+        event.setUrl("http://localhost:5173/motherboards/" + saved.getId());
         productServices.publishEvent(event);
 
         URI uri = urb.path("/motherboards/{id}").buildAndExpand(saved.getId()).toUri();
