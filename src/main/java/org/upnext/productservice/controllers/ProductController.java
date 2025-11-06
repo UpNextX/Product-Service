@@ -46,7 +46,7 @@ public class ProductController {
     public ResponseEntity save
             (
                     @Valid @RequestPart ProductRequest product,
-                    @RequestPart MultipartFile image,
+                    @RequestPart(required = false) MultipartFile image,
                     HttpServletRequest request,
                     UriComponentsBuilder urb,
                     Authentication authentication

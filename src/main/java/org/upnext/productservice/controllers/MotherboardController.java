@@ -38,7 +38,7 @@ public class MotherboardController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> create(
             @Valid @RequestPart MotherboardRequest motherboard,
-            @RequestPart MultipartFile image,
+            @RequestPart(required = false) MultipartFile image,
             HttpServletRequest request,
             UriComponentsBuilder urb,
             Authentication authentication

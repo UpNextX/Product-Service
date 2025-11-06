@@ -38,7 +38,7 @@ public class RAMKitController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> create(
             @Valid @RequestPart RAMKitRequest ramKit,
-            @RequestPart MultipartFile image,
+            @RequestPart(required = false) MultipartFile image,
             HttpServletRequest request,
             UriComponentsBuilder urb,
             Authentication authentication

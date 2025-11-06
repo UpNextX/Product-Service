@@ -69,7 +69,7 @@ public class CPUController {
 
     @PutMapping(value = "/{id}", consumes = {"multipart/form-data"})
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity update(@PathVariable Long id, @Valid @RequestPart CPURequest cpu, @RequestPart MultipartFile image, HttpServletRequest request) {
+    public ResponseEntity update(@PathVariable Long id, @Valid @RequestPart CPURequest cpu, @RequestPart(required = false) MultipartFile image, HttpServletRequest request) {
         Result result = cpuServices.update(id, cpu, image, request);
         if (result.isSuccess()) {
             return ResponseEntity.noContent().build();

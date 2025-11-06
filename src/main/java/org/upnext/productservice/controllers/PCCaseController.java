@@ -54,7 +54,7 @@ public class PCCaseController {
     public ResponseEntity<?> update(
             @PathVariable Long id,
             @Valid @RequestPart PCCaseRequest pcCase,
-            @RequestPart MultipartFile image,
+            @RequestPart(required = false) MultipartFile image,
             HttpServletRequest request
     ) {
         Result result = pcCaseServices.update(id, pcCase, image, request);

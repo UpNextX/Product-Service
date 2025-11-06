@@ -54,7 +54,7 @@ public class PSUController {
     public ResponseEntity<?> update(
             @PathVariable Long id,
             @Valid @RequestPart PSURequest psu,
-            @RequestPart MultipartFile image,
+            @RequestPart(required = false) MultipartFile image,
             HttpServletRequest request
     ) {
         Result result = psuServices.update(id, psu, image, request);

@@ -54,7 +54,7 @@ public class GPUController {
     public ResponseEntity<?> update(
             @PathVariable Long id,
             @Valid @RequestPart GPURequest gpu,
-            @RequestPart MultipartFile image,
+            @RequestPart(required = false) MultipartFile image,
             HttpServletRequest request
     ) {
         Result result = gpuServices.update(id, gpu, image, request);

@@ -22,6 +22,8 @@ public class ProductRequest
     Double price;
     @Min(value = 1, message = "Stock must be at least 1")
     Integer stock;
+    @NotNull
     Long categoryId;
+    @NotNull
     Long brandId;
 }
