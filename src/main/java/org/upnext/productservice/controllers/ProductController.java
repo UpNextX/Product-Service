@@ -46,7 +46,7 @@ public class ProductController {
     public ResponseEntity save
             (
                     @Valid @RequestPart ProductRequest product,
-                    @RequestPart(required = false) MultipartFile image,
+                    @RequestPart MultipartFile image,
                     HttpServletRequest request,
                     UriComponentsBuilder urb,
                     Authentication authentication
@@ -73,7 +73,7 @@ public class ProductController {
 
     @PutMapping(value = "/{id}", consumes = {"multipart/form-data"})
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity update(@PathVariable Long id, @Valid @RequestPart ProductRequest product, @RequestPart MultipartFile image, HttpServletRequest request) {
+    public ResponseEntity update(@PathVariable Long id, @Valid @RequestPart ProductRequest product, @RequestPart(required = false) MultipartFile image, HttpServletRequest request) {
         Result result = productServices.updateProduct(id, product, image, request);
         if (result.isSuccess()) {
             return ResponseEntity.noContent().build();

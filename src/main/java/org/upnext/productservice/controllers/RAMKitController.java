@@ -38,7 +38,7 @@ public class RAMKitController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> create(
             @Valid @RequestPart RAMKitRequest ramKit,
-            @RequestPart(required = false) MultipartFile image,
+            @RequestPart MultipartFile image,
             HttpServletRequest request,
             UriComponentsBuilder urb,
             Authentication authentication
@@ -54,7 +54,7 @@ public class RAMKitController {
     public ResponseEntity<?> update(
             @PathVariable Long id,
             @Valid @RequestPart RAMKitRequest ramKit,
-            @RequestPart MultipartFile image,
+            @RequestPart(required = false) MultipartFile image,
             HttpServletRequest request
     ) {
         Result result = ramKitServices.update(id, ramKit, image, request);

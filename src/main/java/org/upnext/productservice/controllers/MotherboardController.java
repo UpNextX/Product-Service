@@ -38,7 +38,7 @@ public class MotherboardController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> create(
             @Valid @RequestPart MotherboardRequest motherboard,
-            @RequestPart(required = false) MultipartFile image,
+            @RequestPart MultipartFile image,
             HttpServletRequest request,
             UriComponentsBuilder urb,
             Authentication authentication
@@ -54,7 +54,7 @@ public class MotherboardController {
     public ResponseEntity<?> update(
             @PathVariable Long id,
             @Valid @RequestPart MotherboardRequest motherboard,
-            @RequestPart MultipartFile image,
+            @RequestPart(required = false) MultipartFile image,
             HttpServletRequest request
     ) {
         Result result = motherboardServices.update(id, motherboard, image, request);
