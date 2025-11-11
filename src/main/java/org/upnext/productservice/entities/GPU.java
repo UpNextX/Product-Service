@@ -14,6 +14,6 @@ public class GPU extends Product {
     private Integer vramGB;
     private Integer tdpW;
     private Integer recommendedPSUWatt;
-    private String performanceTier; // entry, mid, high, enthusiast
+    private String performanceTier;
     private Integer lengthMm;
 }

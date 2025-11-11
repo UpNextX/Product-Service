@@ -16,9 +16,9 @@ import java.util.List;
 @Table(name = "pc_cases")
 public class PCCase extends Product {
     @ElementCollection
-    private List<String> formFactorSupport; // ["ATX", "Micro-ATX", "Mini-ITX"]
+    private List<String> formFactorSupport;
 
     private Integer maxGpuLengthMm;
     private Integer maxCpuCoolerHeightMm;
-    private String psuFormFactor; // ATX, SFX, SFX-L
+    private String psuFormFactor;
 }

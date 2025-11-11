@@ -12,8 +12,8 @@ import lombok.EqualsAndHashCode;
 public class Motherboard extends Product {
     private String socket;
     private String chipset;
-    private String formFactor; // ATX, Micro-ATX, Mini-ITX
-    private String ramType;    // DDR4, DDR5
+    private String formFactor;
+    private String ramType;
     private Integer ramSlots;
     private Integer maxMemorySpeedMHz;
     private String pcieVersion;

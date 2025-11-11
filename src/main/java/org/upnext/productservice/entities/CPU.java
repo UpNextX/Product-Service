@@ -28,7 +28,7 @@ public class CPU extends Product {
     private Integer tdpW;
 
     @ElementCollection
-    private List<String> supportedMemoryTypes; // e.g. ["DDR4", "DDR5"]
+    private List<String> supportedMemoryTypes;
 
     private Integer maxMemorySpeedMHz;
     @Nullable

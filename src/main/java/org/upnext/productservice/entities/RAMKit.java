@@ -10,9 +10,9 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(name = "ram_kits")
 public class RAMKit extends Product {
-    private String type; // DDR4 or DDR5
+    private String type;
     private Integer capacityGB;
-    private Integer modules; // number of sticks
+    private Integer modules;
     private Integer speedMHz;
     private Integer casLatency;
     private Boolean ecc;
