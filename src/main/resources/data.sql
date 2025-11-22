@@ -1,12 +1,13 @@
 
-INSERT INTO brands (id, name) VALUES (1, 'AMD');
-INSERT INTO brands (id, name) VALUES (2, 'Intel');
-INSERT INTO brands (id, name) VALUES (3, 'NVIDIA');
-INSERT INTO brands (id, name) VALUES (4, 'ASUS');
-INSERT INTO brands (id, name) VALUES (5, 'MSI');
-INSERT INTO brands (id, name) VALUES (6, 'Corsair');
-INSERT INTO brands (id, name) VALUES (7, 'NZXT');
-INSERT INTO brands (id, name) VALUES (8, 'Seasonic');
+INSERT INTO brands (name) VALUES
+                              ('AMD'),
+                              ('Intel'),
+                              ('NVIDIA'),
+                              ('ASUS'),
+                              ('MSI'),
+                              ('Corsair'),
+                              ('NZXT'),
+                              ('Seasonic');
 
 
 INSERT INTO categories (id, name) VALUES (1, 'CPU');
